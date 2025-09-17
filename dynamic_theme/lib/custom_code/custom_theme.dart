@@ -29,12 +29,24 @@ class CustomTheme extends ff_theme.FlutterFlowTheme {
 
       try {
         if (colorValue is String) {
-          // Handle hex colors like "#FF5963" or "FF5963"
+          // Handle hex colors like "#ff1e88e5" (ARGB format)
           String hexColor = colorValue.replaceAll('#', '');
-          if (hexColor.length == 6) {
-            hexColor = 'FF$hexColor'; // Add alpha if not provided
+
+          // If it's already 8 characters (ARGB), use as is
+          if (hexColor.length == 8) {
+            return Color(int.parse(hexColor, radix: 16));
           }
-          return Color(int.parse(hexColor, radix: 16));
+          // If it's 6 characters (RGB), add full alpha (FF)
+          else if (hexColor.length == 6) {
+            hexColor = 'FF$hexColor';
+            return Color(int.parse(hexColor, radix: 16));
+          }
+          // If it's 3 characters, expand and add alpha
+          else if (hexColor.length == 3) {
+            hexColor = hexColor.split('').map((char) => char + char).join('');
+            hexColor = 'FF$hexColor';
+            return Color(int.parse(hexColor, radix: 16));
+          }
         } else if (colorValue is int) {
           return Color(colorValue);
         }
