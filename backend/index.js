@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const { v4: uuidv4 } = require('uuid');
+const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -39,6 +41,30 @@ const sampleThemes = [
             error: '#fff44336',
             info: '#ff2196f3'
         },
+        typography: [
+            { "name": "Display XL", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 32, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Display L", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 24, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Display M", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 20, "letterSpacing": { "unit": "PIXELS", "value": 0 } },
+            { "name": "Display S", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 18, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading XXXL", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 24, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading XXL", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 20, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading XL", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 18, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading L", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading M", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body M-Medium", "fontFamily": "Inter", "fontWeight": "Medium", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading S-Semi Bold", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 12, "letterSpacing": { "unit": "PIXELS", "value": 1 } },
+            { "name": "Body L-Bold", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body L-Semi Bold", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body L-Medium", "fontFamily": "Inter", "fontWeight": "Medium", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body L-Regular", "fontFamily": "Inter", "fontWeight": "Regular", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body M-Bold", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body M-Regular", "fontFamily": "Inter", "fontWeight": "Regular", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body S-Bold", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 12, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body S-Medium", "fontFamily": "Inter", "fontWeight": "Medium", "fontSize": 12, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body S-Regular", "fontFamily": "Inter", "fontWeight": "Regular", "fontSize": 12, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body XS-Regular", "fontFamily": "Inter", "fontWeight": "Regular", "fontSize": 10, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body XS-Medium", "fontFamily": "Inter", "fontWeight": "Medium", "fontSize": 10, "letterSpacing": { "unit": "PERCENT", "value": 0 } }
+        ],
         previewImage: 'https://dummyimage.com/300x200/1E88E5/FFFFFF&text=Ocean+Breeze'
     },
     {
@@ -62,6 +88,30 @@ const sampleThemes = [
             error: '#ffe91e63',
             info: '#ff00bcd4'
         },
+        typography: [
+            { "name": "Display XL", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 32, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Display L", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 24, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Display M", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 20, "letterSpacing": { "unit": "PIXELS", "value": 0 } },
+            { "name": "Display S", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 18, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading XXXL", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 24, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading XXL", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 20, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading XL", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 18, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading L", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading M", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body M-Medium", "fontFamily": "Inter", "fontWeight": "Medium", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading S-Semi Bold", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 12, "letterSpacing": { "unit": "PIXELS", "value": 1 } },
+            { "name": "Body L-Bold", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body L-Semi Bold", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body L-Medium", "fontFamily": "Inter", "fontWeight": "Medium", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body L-Regular", "fontFamily": "Inter", "fontWeight": "Regular", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body M-Bold", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body M-Regular", "fontFamily": "Inter", "fontWeight": "Regular", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body S-Bold", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 12, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body S-Medium", "fontFamily": "Inter", "fontWeight": "Medium", "fontSize": 12, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body S-Regular", "fontFamily": "Inter", "fontWeight": "Regular", "fontSize": 12, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body XS-Regular", "fontFamily": "Inter", "fontWeight": "Regular", "fontSize": 10, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body XS-Medium", "fontFamily": "Inter", "fontWeight": "Medium", "fontSize": 10, "letterSpacing": { "unit": "PERCENT", "value": 0 } }
+        ],
         previewImage: 'https://dummyimage.com/300x200/FF6B35/FFFFFF&text=Sunset+Glow'
     },
     {
@@ -85,6 +135,30 @@ const sampleThemes = [
             error: '#fff44336',
             info: '#ff2196f3'
         },
+        typography: [
+            { "name": "Display XL", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 32, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Display L", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 24, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Display M", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 20, "letterSpacing": { "unit": "PIXELS", "value": 0 } },
+            { "name": "Display S", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 18, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading XXXL", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 24, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading XXL", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 20, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading XL", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 18, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading L", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading M", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body M-Medium", "fontFamily": "Inter", "fontWeight": "Medium", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading S-Semi Bold", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 12, "letterSpacing": { "unit": "PIXELS", "value": 1 } },
+            { "name": "Body L-Bold", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body L-Semi Bold", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body L-Medium", "fontFamily": "Inter", "fontWeight": "Medium", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body L-Regular", "fontFamily": "Inter", "fontWeight": "Regular", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body M-Bold", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body M-Regular", "fontFamily": "Inter", "fontWeight": "Regular", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body S-Bold", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 12, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body S-Medium", "fontFamily": "Inter", "fontWeight": "Medium", "fontSize": 12, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body S-Regular", "fontFamily": "Inter", "fontWeight": "Regular", "fontSize": 12, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body XS-Regular", "fontFamily": "Inter", "fontWeight": "Regular", "fontSize": 10, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body XS-Medium", "fontFamily": "Inter", "fontWeight": "Medium", "fontSize": 10, "letterSpacing": { "unit": "PERCENT", "value": 0 } }
+        ],
         previewImage: 'https://dummyimage.com/300x200/2E7D32/FFFFFF&text=Forest+Green'
     },
     {
@@ -108,6 +182,30 @@ const sampleThemes = [
             error: '#ffef5350',
             info: '#ff42a5f5'
         },
+        typography: [
+            { "name": "Display XL", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 32, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Display L", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 24, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Display M", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 20, "letterSpacing": { "unit": "PIXELS", "value": 0 } },
+            { "name": "Display S", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 18, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading XXXL", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 24, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading XXL", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 20, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading XL", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 18, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading L", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading M", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body M-Medium", "fontFamily": "Inter", "fontWeight": "Medium", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading S-Semi Bold", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 12, "letterSpacing": { "unit": "PIXELS", "value": 1 } },
+            { "name": "Body L-Bold", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body L-Semi Bold", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body L-Medium", "fontFamily": "Inter", "fontWeight": "Medium", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body L-Regular", "fontFamily": "Inter", "fontWeight": "Regular", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body M-Bold", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body M-Regular", "fontFamily": "Inter", "fontWeight": "Regular", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body S-Bold", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 12, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body S-Medium", "fontFamily": "Inter", "fontWeight": "Medium", "fontSize": 12, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body S-Regular", "fontFamily": "Inter", "fontWeight": "Regular", "fontSize": 12, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body XS-Regular", "fontFamily": "Inter", "fontWeight": "Regular", "fontSize": 10, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body XS-Medium", "fontFamily": "Inter", "fontWeight": "Medium", "fontSize": 10, "letterSpacing": { "unit": "PERCENT", "value": 0 } }
+        ],
         previewImage: 'https://dummyimage.com/300x200/7B1FA2/FFFFFF&text=Midnight+Purple'
     },
     {
@@ -131,6 +229,30 @@ const sampleThemes = [
             error: '#ffe53935',
             info: '#ff1976d2'
         },
+        typography: [
+            { "name": "Display XL", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 32, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Display L", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 24, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Display M", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 20, "letterSpacing": { "unit": "PIXELS", "value": 0 } },
+            { "name": "Display S", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 18, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading XXXL", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 24, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading XXL", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 20, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading XL", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 18, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading L", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading M", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body M-Medium", "fontFamily": "Inter", "fontWeight": "Medium", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading S-Semi Bold", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 12, "letterSpacing": { "unit": "PIXELS", "value": 1 } },
+            { "name": "Body L-Bold", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body L-Semi Bold", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body L-Medium", "fontFamily": "Inter", "fontWeight": "Medium", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body L-Regular", "fontFamily": "Inter", "fontWeight": "Regular", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body M-Bold", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body M-Regular", "fontFamily": "Inter", "fontWeight": "Regular", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body S-Bold", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 12, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body S-Medium", "fontFamily": "Inter", "fontWeight": "Medium", "fontSize": 12, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body S-Regular", "fontFamily": "Inter", "fontWeight": "Regular", "fontSize": 12, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body XS-Regular", "fontFamily": "Inter", "fontWeight": "Regular", "fontSize": 10, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body XS-Medium", "fontFamily": "Inter", "fontWeight": "Medium", "fontSize": 10, "letterSpacing": { "unit": "PERCENT", "value": 0 } }
+        ],
         previewImage: 'https://dummyimage.com/300x200/F57C00/FFFFFF&text=Golden+Hour'
     },
     {
@@ -154,7 +276,172 @@ const sampleThemes = [
             error: '#ffd32f2f',
             info: '#ff1976d2'
         },
+        typography: [
+            { "name": "Display XL", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 32, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Display L", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 24, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Display M", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 20, "letterSpacing": { "unit": "PIXELS", "value": 0 } },
+            { "name": "Display S", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 18, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading XXXL", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 24, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading XXL", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 20, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading XL", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 18, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading L", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading M", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body M-Medium", "fontFamily": "Inter", "fontWeight": "Medium", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading S-Semi Bold", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 12, "letterSpacing": { "unit": "PIXELS", "value": 1 } },
+            { "name": "Body L-Bold", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body L-Semi Bold", "fontFamily": "Inter", "fontWeight": "SemiBold", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body L-Medium", "fontFamily": "Inter", "fontWeight": "Medium", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body L-Regular", "fontFamily": "Inter", "fontWeight": "Regular", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body M-Bold", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body M-Regular", "fontFamily": "Inter", "fontWeight": "Regular", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body S-Bold", "fontFamily": "Inter", "fontWeight": "Bold", "fontSize": 12, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body S-Medium", "fontFamily": "Inter", "fontWeight": "Medium", "fontSize": 12, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body S-Regular", "fontFamily": "Inter", "fontWeight": "Regular", "fontSize": 12, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body XS-Regular", "fontFamily": "Inter", "fontWeight": "Regular", "fontSize": 10, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body XS-Medium", "fontFamily": "Inter", "fontWeight": "Medium", "fontSize": 10, "letterSpacing": { "unit": "PERCENT", "value": 0 } }
+        ],
         previewImage: 'https://dummyimage.com/300x200/0277BD/FFFFFF&text=Arctic+Blue'
+    },
+    {
+        id: 'roboto-modern',
+        name: 'Roboto Modern',
+        description: 'Clean modern theme with Roboto font family',
+        colors: {
+            primary: '#ff1976d2',
+            secondary: '#ff2196f3',
+            tertiary: '#ff03a9f4',
+            primaryBackground: '#fffafafa',
+            secondaryBackground: '#ffffffff',
+            primaryText: '#ff212121',
+            secondaryText: '#ff757575',
+            alternate: '#fff5f5f5',
+            accent1: '#331976d2',
+            accent2: '#332196f3',
+            accent3: '#3303a9f4',
+            success: '#ff4caf50',
+            warning: '#ffff9800',
+            error: '#fff44336',
+            info: '#ff00bcd4'
+        },
+        typography: [
+            { "name": "Display XL", "fontFamily": "Roboto", "fontWeight": "Bold", "fontSize": 32, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Display L", "fontFamily": "Roboto", "fontWeight": "Bold", "fontSize": 24, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Display M", "fontFamily": "Roboto", "fontWeight": "Bold", "fontSize": 20, "letterSpacing": { "unit": "PIXELS", "value": 0 } },
+            { "name": "Display S", "fontFamily": "Roboto", "fontWeight": "Bold", "fontSize": 18, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading XXXL", "fontFamily": "Roboto", "fontWeight": "SemiBold", "fontSize": 24, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading XXL", "fontFamily": "Roboto", "fontWeight": "SemiBold", "fontSize": 20, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading XL", "fontFamily": "Roboto", "fontWeight": "SemiBold", "fontSize": 18, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading L", "fontFamily": "Roboto", "fontWeight": "SemiBold", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading M", "fontFamily": "Roboto", "fontWeight": "SemiBold", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body M-Medium", "fontFamily": "Roboto", "fontWeight": "Medium", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading S-Semi Bold", "fontFamily": "Roboto", "fontWeight": "SemiBold", "fontSize": 12, "letterSpacing": { "unit": "PIXELS", "value": 1 } },
+            { "name": "Body L-Bold", "fontFamily": "Roboto", "fontWeight": "Bold", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body L-Semi Bold", "fontFamily": "Roboto", "fontWeight": "SemiBold", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body L-Medium", "fontFamily": "Roboto", "fontWeight": "Medium", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body L-Regular", "fontFamily": "Roboto", "fontWeight": "Regular", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body M-Bold", "fontFamily": "Roboto", "fontWeight": "Bold", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body M-Regular", "fontFamily": "Roboto", "fontWeight": "Regular", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body S-Bold", "fontFamily": "Roboto", "fontWeight": "Bold", "fontSize": 12, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body S-Medium", "fontFamily": "Roboto", "fontWeight": "Medium", "fontSize": 12, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body S-Regular", "fontFamily": "Roboto", "fontWeight": "Regular", "fontSize": 12, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body XS-Regular", "fontFamily": "Roboto", "fontWeight": "Regular", "fontSize": 10, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body XS-Medium", "fontFamily": "Roboto", "fontWeight": "Medium", "fontSize": 10, "letterSpacing": { "unit": "PERCENT", "value": 0 } }
+        ],
+        previewImage: 'https://dummyimage.com/300x200/1976D2/FFFFFF&text=Roboto+Modern'
+    },
+    {
+        id: 'opensans-elegant',
+        name: 'OpenSans Elegant',
+        description: 'Elegant theme with OpenSans font family',
+        colors: {
+            primary: '#ff673ab7',
+            secondary: '#ff9c27b0',
+            tertiary: '#ffe91e63',
+            primaryBackground: '#fffce4ec',
+            secondaryBackground: '#ffffffff',
+            primaryText: '#ff311b92',
+            secondaryText: '#ff6a1b9a',
+            alternate: '#fff3e5f5',
+            accent1: '#33673ab7',
+            accent2: '#339c27b0',
+            accent3: '#33e91e63',
+            success: '#ff4caf50',
+            warning: '#ffff9800',
+            error: '#fff44336',
+            info: '#ff2196f3'
+        },
+        typography: [
+            { "name": "Display XL", "fontFamily": "OpenSans", "fontWeight": "Bold", "fontSize": 32, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Display L", "fontFamily": "OpenSans", "fontWeight": "Bold", "fontSize": 24, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Display M", "fontFamily": "OpenSans", "fontWeight": "Bold", "fontSize": 20, "letterSpacing": { "unit": "PIXELS", "value": 0 } },
+            { "name": "Display S", "fontFamily": "OpenSans", "fontWeight": "Bold", "fontSize": 18, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading XXXL", "fontFamily": "OpenSans", "fontWeight": "SemiBold", "fontSize": 24, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading XXL", "fontFamily": "OpenSans", "fontWeight": "SemiBold", "fontSize": 20, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading XL", "fontFamily": "OpenSans", "fontWeight": "SemiBold", "fontSize": 18, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading L", "fontFamily": "OpenSans", "fontWeight": "SemiBold", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading M", "fontFamily": "OpenSans", "fontWeight": "SemiBold", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body M-Medium", "fontFamily": "OpenSans", "fontWeight": "Medium", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading S-Semi Bold", "fontFamily": "OpenSans", "fontWeight": "SemiBold", "fontSize": 12, "letterSpacing": { "unit": "PIXELS", "value": 1 } },
+            { "name": "Body L-Bold", "fontFamily": "OpenSans", "fontWeight": "Bold", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body L-Semi Bold", "fontFamily": "OpenSans", "fontWeight": "SemiBold", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body L-Medium", "fontFamily": "OpenSans", "fontWeight": "Medium", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body L-Regular", "fontFamily": "OpenSans", "fontWeight": "Regular", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body M-Bold", "fontFamily": "OpenSans", "fontWeight": "Bold", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body M-Regular", "fontFamily": "OpenSans", "fontWeight": "Regular", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body S-Bold", "fontFamily": "OpenSans", "fontWeight": "Bold", "fontSize": 12, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body S-Medium", "fontFamily": "OpenSans", "fontWeight": "Medium", "fontSize": 12, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body S-Regular", "fontFamily": "OpenSans", "fontWeight": "Regular", "fontSize": 12, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body XS-Regular", "fontFamily": "OpenSans", "fontWeight": "Regular", "fontSize": 10, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body XS-Medium", "fontFamily": "OpenSans", "fontWeight": "Medium", "fontSize": 10, "letterSpacing": { "unit": "PERCENT", "value": 0 } }
+        ],
+        previewImage: 'https://dummyimage.com/300x200/673AB7/FFFFFF&text=OpenSans+Elegant'
+    },
+    {
+        id: 'montserrat-modern',
+        name: 'Montserrat Modern',
+        description: 'Modern and elegant theme with Montserrat font family',
+        colors: {
+            primary: '#ff2e63',
+            secondary: '#ff6b9d',
+            tertiary: '#ff8fab',
+            primaryBackground: '#fffafafa',
+            secondaryBackground: '#ffffffff',
+            primaryText: '#ff2c3e50',
+            secondaryText: '#ff7f8c8d',
+            alternate: '#fff5f5f5',
+            accent1: '#332e63',
+            accent2: '#336b9d',
+            accent3: '#338fab',
+            success: '#ff27ae60',
+            warning: '#fff39c12',
+            error: '#ffe74c3c',
+            info: '#ff3498db'
+        },
+        typography: [
+            { "name": "Display XL", "fontFamily": "Montserrat", "fontWeight": "Bold", "fontSize": 32, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Display L", "fontFamily": "Montserrat", "fontWeight": "Bold", "fontSize": 24, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Display M", "fontFamily": "Montserrat", "fontWeight": "Bold", "fontSize": 20, "letterSpacing": { "unit": "PIXELS", "value": 0 } },
+            { "name": "Display S", "fontFamily": "Montserrat", "fontWeight": "Bold", "fontSize": 18, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading XXXL", "fontFamily": "Montserrat", "fontWeight": "SemiBold", "fontSize": 24, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading XXL", "fontFamily": "Montserrat", "fontWeight": "SemiBold", "fontSize": 20, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading XL", "fontFamily": "Montserrat", "fontWeight": "SemiBold", "fontSize": 18, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading L", "fontFamily": "Montserrat", "fontWeight": "SemiBold", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading M", "fontFamily": "Montserrat", "fontWeight": "SemiBold", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body M-Medium", "fontFamily": "Montserrat", "fontWeight": "Medium", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Heading S-Semi Bold", "fontFamily": "Montserrat", "fontWeight": "SemiBold", "fontSize": 12, "letterSpacing": { "unit": "PIXELS", "value": 1 } },
+            { "name": "Body L-Bold", "fontFamily": "Montserrat", "fontWeight": "Bold", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body L-Semi Bold", "fontFamily": "Montserrat", "fontWeight": "SemiBold", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body L-Medium", "fontFamily": "Montserrat", "fontWeight": "Medium", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body L-Regular", "fontFamily": "Montserrat", "fontWeight": "Regular", "fontSize": 16, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body M-Bold", "fontFamily": "Montserrat", "fontWeight": "Bold", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body M-Regular", "fontFamily": "Montserrat", "fontWeight": "Regular", "fontSize": 14, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body S-Bold", "fontFamily": "Montserrat", "fontWeight": "Bold", "fontSize": 12, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body S-Medium", "fontFamily": "Montserrat", "fontWeight": "Medium", "fontSize": 12, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body S-Regular", "fontFamily": "Montserrat", "fontWeight": "Regular", "fontSize": 12, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body XS-Regular", "fontFamily": "Montserrat", "fontWeight": "Regular", "fontSize": 10, "letterSpacing": { "unit": "PERCENT", "value": 0 } },
+            { "name": "Body XS-Medium", "fontFamily": "Montserrat", "fontWeight": "Medium", "fontSize": 10, "letterSpacing": { "unit": "PERCENT", "value": 0 } }
+        ],
+        previewImage: 'https://dummyimage.com/300x200/2E63FF/FFFFFF&text=Montserrat+Modern'
     }
 ];
 
@@ -308,6 +595,103 @@ app.get('/api/themes/featured', (req, res) => {
     });
 });
 
+// Font serving endpoint
+app.get('/api/fonts/:fontFamily/:fontWeight', (req, res) => {
+    const { fontFamily, fontWeight } = req.params;
+    console.log(`[${new Date().toISOString()}] GET /api/fonts/${fontFamily}/${fontWeight} - Serving font file`);
+    
+    // Generate dynamic file name from request parameters
+    // Convert font family to proper case and replace spaces with hyphens
+    const formattedFontFamily = fontFamily
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join('-');
+    
+    // Convert font weight to proper case and replace spaces with hyphens
+    const formattedFontWeight = fontWeight
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join('-');
+    
+    // Generate the expected file name
+    const fileName = `${formattedFontFamily}-${formattedFontWeight}`;
+    const fontPath = path.join(__dirname, 'fonts', `${fileName}.ttf`);
+    
+    console.log(`[${new Date().toISOString()}] Looking for font file: ${fontPath}`);
+    
+    // Check if font file exists
+    if (fs.existsSync(fontPath)) {
+        console.log(`[${new Date().toISOString()}] Serving font file: ${fontPath}`);
+        
+        // Set appropriate headers for font files
+        res.setHeader('Content-Type', 'font/ttf');
+        res.setHeader('Cache-Control', 'public, max-age=31536000'); // Cache for 1 year
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        
+        // Send the font file
+        res.sendFile(fontPath);
+    } else {
+        console.log(`[${new Date().toISOString()}] Font file not found: ${fontPath}`);
+        
+        // Try to find alternative font files in the directory
+        const fontsDir = path.join(__dirname, 'fonts');
+        const availableFonts = fs.readdirSync(fontsDir)
+            .filter(file => file.endsWith('.ttf'))
+            .map(file => file.replace('.ttf', ''));
+        
+        console.log(`[${new Date().toISOString()}] Available fonts: ${availableFonts.join(', ')}`);
+        
+        res.status(404).json({
+            success: false,
+            error: 'Font file not found',
+            message: `Font ${fontFamily} ${fontWeight} is not available`,
+            requestedFile: `${fileName}.ttf`,
+            availableFonts: availableFonts,
+            suggestion: `Expected format: ${formattedFontFamily}-${formattedFontWeight}.ttf`
+        });
+    }
+});
+
+// List available fonts endpoint
+app.get('/api/fonts', (req, res) => {
+    console.log(`[${new Date().toISOString()}] GET /api/fonts - Listing available fonts`);
+    
+    try {
+        const fontsDir = path.join(__dirname, 'fonts');
+        const availableFonts = fs.readdirSync(fontsDir)
+            .filter(file => file.endsWith('.ttf'))
+            .map(file => {
+                const fileName = file.replace('.ttf', '');
+                // Parse font name and weight from filename
+                const parts = fileName.split('-');
+                const weight = parts.pop();
+                const family = parts.join('-');
+                
+                return {
+                    fileName: file,
+                    family: family,
+                    weight: weight,
+                    fullName: fileName
+                };
+            });
+        
+        console.log(`[${new Date().toISOString()}] Found ${availableFonts.length} font files`);
+        
+        res.json({
+            success: true,
+            fonts: availableFonts,
+            count: availableFonts.length
+        });
+    } catch (error) {
+        console.error(`[${new Date().toISOString()}] Error reading fonts directory:`, error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to read fonts directory',
+            message: error.message
+        });
+    }
+});
+
 // Health check endpoint
 app.get('/health', (req, res) => {
     console.log(`[${new Date().toISOString()}] GET /health - Health check requested`);
@@ -358,6 +742,8 @@ app.listen(PORT, () => {
     console.log(`[${timestamp}]    PUT    /api/themes/:id      - Update theme`);
     console.log(`[${timestamp}]    DELETE /api/themes/:id      - Delete theme`);
     console.log(`[${timestamp}]    GET    /api/themes/featured - Get featured themes`);
+    console.log(`[${timestamp}]    GET    /api/fonts           - List available fonts`);
+    console.log(`[${timestamp}]    GET    /api/fonts/:family/:weight - Serve font file`);
     console.log(`[${timestamp}]    GET    /health              - Health check`);
     console.log(`[${timestamp}] 🚀 Server ready to accept requests!`);
 });
