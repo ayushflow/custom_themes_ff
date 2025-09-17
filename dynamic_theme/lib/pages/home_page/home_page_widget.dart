@@ -3,10 +3,13 @@ import '/backend/schema/structs/index.dart';
 import '/components/color_card_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/flutter_flow_widgets.dart';
 import 'dart:ui';
 import 'package:dynamic_theme/custom_code/theme_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'home_page_model.dart';
 export 'home_page_model.dart';
 
@@ -36,7 +39,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       safeSetState(() {});
       _model.allThemesRes = await AppThemeGroup.getThemesCall.call();
 
-      if (_model.allThemesRes?.succeeded ?? true) {
+      if ((_model.allThemesRes?.succeeded ?? true)) {
         _model.showLoader = false;
         safeSetState(() {});
         return;
@@ -86,12 +89,13 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                 if (_model.showLoader) {
                   return Text(
                     'Loading...',
-                    style: FlutterFlowTheme.of(context).labelLarge,
+                    style: FlutterFlowTheme.of(context).labelLarge.override(
+                        ),
                   );
                 } else {
-                  return SingleChildScrollView(
-                    child: Padding(
-                      padding: EdgeInsets.all(16.0),
+                  return Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: SingleChildScrollView(
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,7 +105,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                               final allThemes = ThemeResStruct.maybeFromMap(
                                           (_model.allThemesRes?.jsonBody ?? ''))
                                       ?.themes
-                                      .toList() ??
+                                      ?.toList() ??
                                   [];
 
                               return Wrap(
@@ -144,7 +148,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                           child: Text(
                                             allThemesItem.name,
                                             style: FlutterFlowTheme.of(context)
-                                                .bodyMedium,
+                                                .bodyMedium
+                                                .override(
+                                                ),
                                           ),
                                         ),
                                       ),
@@ -331,95 +337,120 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 24.0),
-                          // Typography Demo Section
-                          Text(
-                            'Typography Styles',
-                            style: FlutterFlowTheme.of(context).headlineMedium,
-                          ),
-                          SizedBox(height: 16.0),
-                          // Display styles
-                          Text(
-                            'Display Styles',
-                            style: FlutterFlowTheme.of(context).titleMedium,
-                          ),
-                          SizedBox(height: 8.0),
-                          Text(
-                            'Display Large',
-                            style: FlutterFlowTheme.of(context).displayLarge,
-                          ),
-                          SizedBox(height: 4.0),
-                          Text(
-                            'Display Medium',
-                            style: FlutterFlowTheme.of(context).displayMedium,
-                          ),
-                          SizedBox(height: 4.0),
-                          Text(
-                            'Display Small',
-                            style: FlutterFlowTheme.of(context).displaySmall,
-                          ),
-                          SizedBox(height: 16.0),
-                          // Headline styles
-                          Text(
-                            'Headline Styles',
-                            style: FlutterFlowTheme.of(context).titleMedium,
-                          ),
-                          SizedBox(height: 8.0),
-                          Text(
-                            'Headline Large',
-                            style: FlutterFlowTheme.of(context).headlineLarge,
-                          ),
-                          SizedBox(height: 4.0),
-                          Text(
-                            'Headline Medium',
-                            style: FlutterFlowTheme.of(context).headlineMedium,
-                          ),
-                          SizedBox(height: 4.0),
-                          Text(
-                            'Headline Small',
-                            style: FlutterFlowTheme.of(context).headlineSmall,
-                          ),
-                          SizedBox(height: 16.0),
-                          // Body styles
-                          Text(
-                            'Body Styles',
-                            style: FlutterFlowTheme.of(context).titleMedium,
-                          ),
-                          SizedBox(height: 8.0),
-                          Text(
-                            'Body Large - This is a sample text to demonstrate the body large typography style.',
-                            style: FlutterFlowTheme.of(context).bodyLarge,
-                          ),
-                          SizedBox(height: 4.0),
-                          Text(
-                            'Body Medium - This is a sample text to demonstrate the body medium typography style.',
-                            style: FlutterFlowTheme.of(context).bodyMedium,
-                          ),
-                          SizedBox(height: 4.0),
-                          Text(
-                            'Body Small - This is a sample text to demonstrate the body small typography style.',
-                            style: FlutterFlowTheme.of(context).bodySmall,
-                          ),
-                          SizedBox(height: 16.0),
-                          // Label styles
-                          Text(
-                            'Label Styles',
-                            style: FlutterFlowTheme.of(context).titleMedium,
-                          ),
-                          SizedBox(height: 8.0),
-                          Text(
-                            'Label Large',
-                            style: FlutterFlowTheme.of(context).labelLarge,
-                          ),
-                          SizedBox(height: 4.0),
-                          Text(
-                            'Label Medium',
-                            style: FlutterFlowTheme.of(context).labelMedium,
-                          ),
-                          SizedBox(height: 4.0),
-                          Text(
-                            'Label Small',
-                            style: FlutterFlowTheme.of(context).labelSmall,
+                          Column(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Divider(
+                                thickness: 2.0,
+                                color: FlutterFlowTheme.of(context).alternate,
+                              ),
+                              Text(
+                                'Display Large',
+                                style: FlutterFlowTheme.of(context)
+                                    .displayLarge
+                                    .override(
+                                    ),
+                              ),
+                              Text(
+                                'Display Medium',
+                                style: FlutterFlowTheme.of(context)
+                                    .displayMedium
+                                    .override(
+                                    ),
+                              ),
+                              Text(
+                                'Display Small',
+                                style: FlutterFlowTheme.of(context)
+                                    .displaySmall
+                                    .override(
+                                    ),
+                              ),
+                              Text(
+                                'Headline Large',
+                                style: FlutterFlowTheme.of(context)
+                                    .headlineLarge
+                                    .override(
+                                    ),
+                              ),
+                              Text(
+                                'Headline Medium',
+                                style: FlutterFlowTheme.of(context)
+                                    .headlineMedium
+                                    .override(
+                                    ),
+                              ),
+                              Text(
+                                'Headline Small',
+                                style: FlutterFlowTheme.of(context)
+                                    .headlineSmall
+                                    .override(
+                                    ),
+                              ),
+                              Text(
+                                'Title Large',
+                                style: FlutterFlowTheme.of(context)
+                                    .titleLarge
+                                    .override(
+                                    ),
+                              ),
+                              Text(
+                                'Title Medium',
+                                style: FlutterFlowTheme.of(context)
+                                    .titleMedium
+                                    .override(
+                                    ),
+                              ),
+                              Text(
+                                'Title Small',
+                                style: FlutterFlowTheme.of(context)
+                                    .titleSmall
+                                    .override(
+                                    ),
+                              ),
+                              Text(
+                                'Label Large',
+                                style: FlutterFlowTheme.of(context)
+                                    .labelLarge
+                                    .override(
+                                    ),
+                              ),
+                              Text(
+                                'Label Medium',
+                                style: FlutterFlowTheme.of(context)
+                                    .labelMedium
+                                    .override(
+                                    ),
+                              ),
+                              Text(
+                                'Label Small',
+                                style: FlutterFlowTheme.of(context)
+                                    .labelSmall
+                                    .override(
+                                    ),
+                              ),
+                              Text(
+                                'Body Large',
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyLarge
+                                    .override(
+                                    ),
+                              ),
+                              Text(
+                                'Body Medium',
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                    ),
+                              ),
+                              Text(
+                                'Body Small',
+                                style: FlutterFlowTheme.of(context)
+                                    .bodySmall
+                                    .override(
+                                    ),
+                              ),
+                            ].divide(SizedBox(height: 8.0)),
                           ),
                         ].divide(SizedBox(height: 12.0)),
                       ),
