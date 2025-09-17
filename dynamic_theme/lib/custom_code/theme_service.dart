@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import 'custom_theme.dart';
+import 'typography_font_manager.dart';
 
 class ThemeService {
   // Configuration for different environments
@@ -41,12 +42,14 @@ class ThemeService {
       final baseTheme = isDark ? DarkModeTheme() : LightModeTheme();
       _currentCustomTheme =
           CustomTheme(themeData: themeData, baseTheme: baseTheme);
+      // Clear typography cache to ensure fresh font loading
+      _currentCustomTheme?.clearTypographyCache();
       await _prefs?.setBool(kUseCustomThemeKey, true);
       await _prefs?.setString(kCustomThemeDataKey, json.encode(themeData));
       // Trigger app rebuild
       themeChangeNotifier.value = themeChangeNotifier.value + 1;
     } catch (e) {
-      print('Error setting custom theme: $e');
+      debugPrint('Error setting custom theme: $e');
     }
   }
 
@@ -82,7 +85,7 @@ class ThemeService {
           _currentCustomTheme =
               CustomTheme(themeData: themeData, baseTheme: LightModeTheme());
         } catch (e) {
-          print('Error loading saved custom theme: $e');
+          debugPrint('Error loading saved custom theme: $e');
           await clearCustomTheme();
         }
       }
@@ -112,31 +115,18 @@ class ThemeService {
   // Fetch available themes from the server
   static Future<List<ThemePreset>> getAvailableThemes() async {
     try {
-      print('Fetching themes from: $baseUrl/api/themes');
       final response = await http.get(Uri.parse('$baseUrl/api/themes'));
-      print('Response status: ${response.statusCode}');
-      print('Response body length: ${response.body.length}');
-      print(
-          'Response body preview: ${response.body.isNotEmpty ? response.body.substring(0, response.body.length > 100 ? 100 : response.body.length) : "EMPTY"}');
 
       if (response.statusCode == 200) {
         // Check if response body is not empty
         if (response.body.isEmpty) {
-          print('Warning: Empty response body from themes API');
           return [];
         }
 
         final decodedData = json.decode(response.body);
 
         // Check if decoded data is null or not a map
-        if (decodedData == null) {
-          print('Warning: Null response from themes API');
-          return [];
-        }
-
-        if (decodedData is! Map<String, dynamic>) {
-          print(
-              'Warning: Invalid response format from themes API. Expected Map, got ${decodedData.runtimeType}');
+        if (decodedData == null || decodedData is! Map<String, dynamic>) {
           return [];
         }
 
@@ -144,7 +134,6 @@ class ThemeService {
 
         // Check if the response has the expected structure
         if (data['success'] != true) {
-          print('Warning: API response indicates failure: ${data['success']}');
           return [];
         }
 
@@ -152,8 +141,6 @@ class ThemeService {
 
         // Check if themes key exists and is a list
         if (themes == null || themes is! List) {
-          print('Warning: No themes found or invalid themes format');
-          print('Available keys in response: ${data.keys.toList()}');
           return [];
         }
 
@@ -163,11 +150,9 @@ class ThemeService {
                 if (theme is Map<String, dynamic>) {
                   return ThemePreset.fromJson(theme);
                 } else {
-                  print('Warning: Invalid theme format: ${theme.runtimeType}');
                   return null;
                 }
               } catch (e) {
-                print('Warning: Error parsing theme: $e');
                 return null;
               }
             })
@@ -178,7 +163,7 @@ class ThemeService {
         throw Exception('Failed to load themes: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error fetching themes: $e');
+      debugPrint('Error fetching themes: $e');
       return [];
     }
   }
@@ -186,32 +171,19 @@ class ThemeService {
   // Apply a theme by ID
   static Future<bool> applyTheme(String themeId, {bool isDark = false}) async {
     try {
-      print('Applying theme with ID: $themeId');
       final response =
           await http.get(Uri.parse('$baseUrl/api/themes/$themeId'));
-      print('Response status: ${response.statusCode}');
-      print('Response body length: ${response.body.length}');
-      print(
-          'Response body preview: ${response.body.isNotEmpty ? response.body.substring(0, response.body.length > 100 ? 100 : response.body.length) : "EMPTY"}');
 
       if (response.statusCode == 200) {
         // Check if response body is not empty
         if (response.body.isEmpty) {
-          print('Warning: Empty response body from theme API');
           return false;
         }
 
         final decodedData = json.decode(response.body);
 
         // Check if decoded data is null or not a map
-        if (decodedData == null) {
-          print('Warning: Null response from theme API');
-          return false;
-        }
-
-        if (decodedData is! Map<String, dynamic>) {
-          print(
-              'Warning: Invalid response format from theme API. Expected Map, got ${decodedData.runtimeType}');
+        if (decodedData == null || decodedData is! Map<String, dynamic>) {
           return false;
         }
 
@@ -219,27 +191,43 @@ class ThemeService {
 
         // Check if the response has the expected structure
         if (themeData['success'] != true) {
-          print(
-              'Warning: API response indicates failure: ${themeData['success']}');
           return false;
         }
 
         final colors = themeData['colors'];
+        final typography = themeData['typography'];
 
         // Check if colors key exists and is a map
         if (colors == null || colors is! Map<String, dynamic>) {
-          print('Warning: No colors found or invalid colors format');
-          print('Available keys in response: ${themeData.keys.toList()}');
           return false;
         }
 
-        await setCustomTheme(colors, isDark: isDark);
+        // Create full theme data including typography
+        final fullThemeData = <String, dynamic>{
+          ...colors,
+          if (typography != null) 'typography': typography,
+        };
+
+        // Clear font cache and preload fonts if typography data is available
+        if (typography != null && typography is List) {
+          try {
+            final fontManager = TypographyFontManager();
+            // Clear existing font cache to ensure fresh loading
+            fontManager.clearCache();
+            await fontManager.preloadTypographyFonts(typography);
+          } catch (e) {
+            debugPrint('Failed to preload fonts: $e');
+            // Continue with theme application even if font loading fails
+          }
+        }
+
+        await setCustomTheme(fullThemeData, isDark: isDark);
         return true;
       } else {
         throw Exception('Failed to load theme: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error applying theme: $e');
+      debugPrint('Error applying theme: $e');
       return false;
     }
   }
@@ -292,7 +280,6 @@ class ThemeService {
 
         // Check if id key exists and is a string
         if (id == null || id is! String) {
-          print('Warning: No id found or invalid id format');
           return null;
         }
 
@@ -301,7 +288,7 @@ class ThemeService {
         throw Exception('Failed to save theme: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error saving theme: $e');
+      debugPrint('Error saving theme: $e');
       return null;
     }
   }
@@ -352,8 +339,7 @@ class ThemePreset {
         previewImage: json['previewImage'] as String? ?? '',
       );
     } catch (e) {
-      print('Error parsing ThemePreset from JSON: $e');
-      print('JSON data: $json');
+      debugPrint('Error parsing ThemePreset from JSON: $e');
       rethrow;
     }
   }

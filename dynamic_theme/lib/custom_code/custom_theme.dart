@@ -2,9 +2,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../flutter_flow/flutter_flow_theme.dart'
     as ff_theme; // Import with alias to avoid conflicts
+import 'custom_typography.dart';
 
 class CustomTheme extends ff_theme.FlutterFlowTheme {
   late final ff_theme.FlutterFlowTheme _baseTheme;
+  late final Map<String, dynamic> _themeData;
+  ff_theme.Typography? _cachedTypography;
 
   CustomTheme({
     required Map<String, dynamic> themeData,
@@ -12,7 +15,15 @@ class CustomTheme extends ff_theme.FlutterFlowTheme {
   }) {
     // Use provided base theme or default to light theme
     _baseTheme = baseTheme ?? ff_theme.LightModeTheme();
+    _themeData = themeData;
     _populateFromJson(themeData);
+    // Clear any cached typography to ensure fresh font loading
+    _cachedTypography = null;
+  }
+
+  /// Clear cached typography when theme changes
+  void clearTypographyCache() {
+    _cachedTypography = null;
   }
 
   // Factory constructor to create from JSON string
@@ -85,9 +96,17 @@ class CustomTheme extends ff_theme.FlutterFlowTheme {
     cultured = parseColor(data['cultured'], _baseTheme.cultured);
   }
 
-  // Copy all typography from base theme (no customization for now)
+  // Use custom typography if available, otherwise fall back to base theme
   @override
-  ff_theme.Typography get typography => _baseTheme.typography;
+  ff_theme.Typography get typography {
+    if (_themeData.containsKey('typography') &&
+        _themeData['typography'] != null) {
+      // Always create fresh typography instance to ensure font changes are applied
+      _cachedTypography = CustomTypography(_themeData, this);
+      return _cachedTypography!;
+    }
+    return _baseTheme.typography;
+  }
 
   // Method to convert current custom colors to JSON
   Map<String, String> toJson() {
